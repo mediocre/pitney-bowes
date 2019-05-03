@@ -22,7 +22,7 @@ function PitneyBowes(args) {
                 grant_type: 'client_credentials'
             },
             headers: {
-                Authorization: `Basic ${new Buffer(`${options.api_key}:${options.api_secret}`).toString('base64')}`
+                Authorization: `Basic ${Buffer.from(`${options.api_key}:${options.api_secret}`).toString('base64')}`
             },
             json: true,
             method: 'POST',
