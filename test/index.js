@@ -4,7 +4,7 @@ const cache = require('memory-cache');
 
 const PitneyBowes = require('../index');
 
-describe('PitneyBowes.getToken', function() {
+describe('PitneyBowes.getOAuthToken', function() {
     this.timeout(5000);
 
     beforeEach(function() {
@@ -17,7 +17,7 @@ describe('PitneyBowes.getToken', function() {
             authapi_url: 'invalid'
         });
 
-        pitneyBowes.getToken(function(err, token) {
+        pitneyBowes.getOAuthToken(function(err, token) {
             assert(err);
             assert.strictEqual(token, undefined);
 
@@ -30,7 +30,7 @@ describe('PitneyBowes.getToken', function() {
             client_id: 'invalid'
         });
 
-        pitneyBowes.getToken(function(err, token) {
+        pitneyBowes.getOAuthToken(function(err, token) {
             assert(err);
             assert.strictEqual(err.message, 'invalid_client');
             assert.strictEqual(err.status, 400);
@@ -42,13 +42,12 @@ describe('PitneyBowes.getToken', function() {
 
     it('should return an error for non 200 status code', function(done) {
         const pitneyBowes = new PitneyBowes({
-            authapi_url: 'https://httpstat.us/500#',
-            client_id: process.env.NEWGISTICS_CLIENT_ID,
-            client_secret: process.env.NEWGISTICS_CLIENT_SECRET,
-            shippingapi_url: process.env.NEWGISTICS_SHIPPINGAPI_URL
+            base_url: 'https://httpstat.us/500#',
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
         });
 
-        pitneyBowes.getToken(function(err) {
+        pitneyBowes.getOAuthToken(function(err) {
             assert(err);
             assert.strictEqual(err.message, 'Internal Server Error');
             assert.strictEqual(err.status, 500);
@@ -60,12 +59,12 @@ describe('PitneyBowes.getToken', function() {
     it('should return a valid token', function(done) {
         const pitneyBowes = new PitneyBowes({
             authapi_url: process.env.NEWGISTICS_AUTHAPI_URL,
-            client_id: process.env.NEWGISTICS_CLIENT_ID,
-            client_secret: process.env.NEWGISTICS_CLIENT_SECRET,
-            shippingapi_url: process.env.NEWGISTICS_SHIPPINGAPI_URL
+            base_url: 'https://fixme',
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
         });
 
-        pitneyBowes.getToken(function(err, token) {
+        pitneyBowes.getOAuthToken(function(err, token) {
             assert.ifError(err);
             assert(token);
             assert(token.access_token);
@@ -79,15 +78,15 @@ describe('PitneyBowes.getToken', function() {
     it('should return the same token on subsequent calls', function(done) {
         const pitneyBowes = new PitneyBowes({
             authapi_url: process.env.NEWGISTICS_AUTHAPI_URL,
-            client_id: process.env.NEWGISTICS_CLIENT_ID,
-            client_secret: process.env.NEWGISTICS_CLIENT_SECRET,
-            shippingapi_url: process.env.NEWGISTICS_SHIPPINGAPI_URL
+            base_url: 'https://fixme',
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
         });
 
-        pitneyBowes.getToken(function(err, token1) {
+        pitneyBowes.getOAuthToken(function(err, token1) {
             assert.ifError(err);
 
-            pitneyBowes.getToken(function(err, token2) {
+            pitneyBowes.getOAuthToken(function(err, token2) {
                 assert.ifError(err);
                 assert.deepStrictEqual(token1, token2);
 
