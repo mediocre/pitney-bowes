@@ -6,7 +6,7 @@ function PitneyBowes(args) {
     const options = Object.assign({
         api_key: '',
         api_secret: '',
-        baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices',
+        baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices'
     }, args);
 
     this.getOAuthToken = function(callback) {

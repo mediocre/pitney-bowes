@@ -36,7 +36,7 @@ describe('PitneyBowes.getOAuthToken', function() {
 
         pitneyBowes.getOAuthToken(function(err, oAuthToken) {
             assert.ifError(err);
-            
+
             assert(oAuthToken);
             assert(oAuthToken.access_token);
             assert(oAuthToken.clientID);
