@@ -17,7 +17,7 @@ var pitneyBowes = new PitneyBowes({
 });
 ```
 
-### pitneyBowes.getOAuthToken()
+### pitneyBowes.getOAuthToken(callback)
 
 Each request to the PB Complete Shipping APIs requires authentication via an OAuth token. This API call generates the OAuth token based on the Base64-encoded value of the API key and secret associated with your PB Complete Shipping APIs developer account. The token expires after 10 hours, after which you must create a new one.
 
@@ -29,7 +29,19 @@ pitneyBowes.getOAuthToken(function(err, oAuthToken) {
 });
 ```
 
-### pitneyBowes.tlsTest()
+### pitneyBowes.tracking(args, callback)
+
+Shipment labels that are printed using the PB Complete Shipping APIs are automatically tracked. This operation retrieves package status for a label.
+
+**Example**
+
+```javascript
+pitneyBowes.tracking({ trackingNumber: 'trackingNumber' }, function(err, data) {
+    console.log(data);
+});
+```
+
+### pitneyBowes.tlsTest(callback)
 
 The minimum supported security protocol for connection to the PB Complete Shipping APIs is TLS v1.2. To test whether your servers support TLS v1.2: From your servers, issue the following operation. The operation retrieves a resource that accepts only the TLS v1.2 protocol:
 

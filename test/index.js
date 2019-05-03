@@ -68,6 +68,25 @@ describe('PitneyBowes.getOAuthToken', function() {
     });
 });
 
+describe('PitneyBowes.tracking', function() {
+    this.timeout(5000);
+
+    it('should return package status', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+            assert.ifError(err);
+            assert(data);
+            assert.strictEqual(data.trackingNumber, '4206336792748927005269000010615207');
+
+            done();
+        });
+    });
+});
+
 describe('PitneyBowes.tlsTest', function() {
     this.timeout(5000);
 
@@ -82,4 +101,3 @@ describe('PitneyBowes.tlsTest', function() {
         });
     });
 });
-

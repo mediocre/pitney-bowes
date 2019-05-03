@@ -35,13 +35,42 @@ function PitneyBowes(args) {
             }
 
             if (res.statusCode !== 200) {
-                return callback(createError(res.statusCode, body && body.error));
+                return callback(createError(res.statusCode, body));
             }
 
             // Put the token in memory cache
             cache.put('pitney-bowes-oauth-token', body, body.expiresIn * 1000 / 2);
 
             callback(null, body);
+        });
+    };
+
+    this.tracking = function(args, callback) {
+        this.getOAuthToken(function(err, token) {
+            if (err) {
+                return callback(err);
+            }
+
+            const req = {
+                auth: {
+                    bearer: token.access_token
+                },
+                json: true,
+                method: 'GET',
+                url: `${options.baseUrl}/v1/tracking/${args.trackingNumber}?packageIdentifierType=TrackingNumber&carrier=${options.carrier || 'USPS'}`
+            };
+
+            request(req, function(err, res, body) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (res.statusCode !== 200) {
+                    return callback(createError(res.statusCode, body));
+                }
+
+                callback(null, body);
+            });
         });
     };
 
