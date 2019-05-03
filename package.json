@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "http-errors": "~1.7.1",
+    "memory-cache": "~0.2.0",
     "request": "~2.88.0"
   },
   "description": "The Pitney Bowes Complete Shipping APIs let you integrate shipping services from multiple carriers, including USPS® and Newgistics®, into your services and applications.",

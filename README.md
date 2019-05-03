@@ -10,7 +10,23 @@ The Pitney Bowes Complete Shipping APIs let you integrate shipping services from
 ```javascript
 const PitneyBowes = require('pitney-bowes');
 
-var pitneyBowes = new PitneyBowes();
+var pitneyBowes = new PitneyBowes({
+    api_key: 'your_api_key',
+    api_secret: 'your_api_secret',
+    baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices'
+});
+```
+
+### pitneyBowes.getOAuthToken()
+
+Each request to the PB Complete Shipping APIs requires authentication via an OAuth token. This API call generates the OAuth token based on the Base64-encoded value of the API key and secret associated with your PB Complete Shipping APIs developer account. The token expires after 10 hours, after which you must create a new one.
+
+**Example**
+
+```javascript
+pitneyBowes.getOAuthToken(function(err, oAuthToken) {
+    console.log(oAuthToken);
+});
 ```
 
 ### pitneyBowes.tlsTest()

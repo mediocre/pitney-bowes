@@ -9,42 +9,14 @@ describe('PitneyBowes.getOAuthToken', function() {
 
     beforeEach(function() {
         // Clear existing token
-        cache.del('newgistics-client-token');
-    });
-
-    it('should return an error for invalid authapi_url', function(done) {
-        const pitneyBowes = new PitneyBowes({
-            authapi_url: 'invalid'
-        });
-
-        pitneyBowes.getOAuthToken(function(err, token) {
-            assert(err);
-            assert.strictEqual(token, undefined);
-
-            done();
-        });
-    });
-
-    it('should return an invalid_client error', function(done) {
-        const pitneyBowes = new PitneyBowes({
-            client_id: 'invalid'
-        });
-
-        pitneyBowes.getOAuthToken(function(err, token) {
-            assert(err);
-            assert.strictEqual(err.message, 'invalid_client');
-            assert.strictEqual(err.status, 400);
-            assert.strictEqual(token, undefined);
-
-            done();
-        });
+        cache.del('pitney-bowes-oauth-token');
     });
 
     it('should return an error for non 200 status code', function(done) {
         const pitneyBowes = new PitneyBowes({
-            base_url: 'https://httpstat.us/500#',
             api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_secret: process.env.api_secret,
+            baseUrl: 'https://httpbin.org/status/500#'
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -56,20 +28,22 @@ describe('PitneyBowes.getOAuthToken', function() {
         });
     });
 
-    it('should return a valid token', function(done) {
+    it('should return a valid oAuthToken', function(done) {
         const pitneyBowes = new PitneyBowes({
-            authapi_url: process.env.NEWGISTICS_AUTHAPI_URL,
-            base_url: 'https://fixme',
             api_key: process.env.api_key,
             api_secret: process.env.api_secret
         });
 
-        pitneyBowes.getOAuthToken(function(err, token) {
+        pitneyBowes.getOAuthToken(function(err, oAuthToken) {
             assert.ifError(err);
-            assert(token);
-            assert(token.access_token);
-            assert(token.expires_in);
-            assert(token.token_type);
+            
+            assert(oAuthToken);
+            assert(oAuthToken.access_token);
+            assert(oAuthToken.clientID);
+            assert(oAuthToken.expiresIn);
+            assert(oAuthToken.issuedAt);
+            assert(oAuthToken.org);
+            assert.strictEqual(oAuthToken.tokenType, 'BearerToken');
 
             done();
         });
@@ -77,8 +51,6 @@ describe('PitneyBowes.getOAuthToken', function() {
 
     it('should return the same token on subsequent calls', function(done) {
         const pitneyBowes = new PitneyBowes({
-            authapi_url: process.env.NEWGISTICS_AUTHAPI_URL,
-            base_url: 'https://fixme',
             api_key: process.env.api_key,
             api_secret: process.env.api_secret
         });
