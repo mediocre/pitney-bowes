@@ -1,7 +1,7 @@
 const createError = require('http-errors');
 const request = require('request');
 
-function PitneyBowes(args) {
+function PitneyBowes() {
     this.tlsTest = function(callback) {
         const req = {
             method: 'GET',
