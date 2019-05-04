@@ -93,6 +93,35 @@ function PitneyBowes(args) {
             callback(null, body);
         });
     };
+
+    this.verify = function(args, callback) {
+        this.getOAuthToken(function(err, oAuthToken) {
+            if (err) {
+                return callback(err);
+            }
+
+            const req = {
+                auth: {
+                    bearer: oAuthToken.access_token
+                },
+                json: args.address,
+                method: 'POST',
+                url: `${options.baseUrl}/v1/addresses/verify?minimalAddressValidation=${args.minimalAddressValidation || false}`
+            };
+
+            request(req, function(err, res, body) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (res.statusCode !== 200) {
+                    return callback(createError(res.statusCode, body));
+                }
+
+                callback(null, body);
+            });
+        });
+    };
 }
 
 module.exports = PitneyBowes;
