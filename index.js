@@ -6,7 +6,8 @@ function PitneyBowes(args) {
     const options = Object.assign({
         api_key: '',
         api_secret: '',
-        baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices'
+        baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices',
+        baseTestUrl: 'https://api-test.pitneybowes.com'
     }, args);
 
     this.getOAuthToken = function(callback) {
@@ -46,14 +47,14 @@ function PitneyBowes(args) {
     };
 
     this.tracking = function(args, callback) {
-        this.getOAuthToken(function(err, token) {
+        this.getOAuthToken(function(err, oAuthToken) {
             if (err) {
                 return callback(err);
             }
 
             const req = {
                 auth: {
-                    bearer: token.access_token
+                    bearer: oAuthToken.access_token
                 },
                 json: true,
                 method: 'GET',
@@ -77,7 +78,7 @@ function PitneyBowes(args) {
     this.tlsTest = function(callback) {
         const req = {
             method: 'GET',
-            url: 'https://api-test.pitneybowes.com/tlstest'
+            url: `${options.baseTestUrl}/tlstest`
         };
 
         request(req, function(err, res, body) {
@@ -86,7 +87,7 @@ function PitneyBowes(args) {
             }
 
             if (res.statusCode !== 200) {
-                return callback(createError(res.statusCode, res.body));
+                return callback(createError(res.statusCode));
             }
 
             callback(null, body);

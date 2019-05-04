@@ -14,15 +14,14 @@ describe('PitneyBowes.getOAuthToken', function() {
 
     it('should return an error for invalid baseUrl', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret,
             baseUrl: 'invalid'
         });
 
-        pitneyBowes.getOAuthToken(function(err) {
+        pitneyBowes.getOAuthToken(function(err, oAuthToken) {
             assert(err);
             assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
             assert.strictEqual(err.status, undefined);
+            assert.strictEqual(oAuthToken, undefined);
 
             done();
         });
@@ -35,10 +34,11 @@ describe('PitneyBowes.getOAuthToken', function() {
             baseUrl: 'https://httpbin.org/status/500#'
         });
 
-        pitneyBowes.getOAuthToken(function(err) {
+        pitneyBowes.getOAuthToken(function(err, oAuthToken) {
             assert(err);
             assert.strictEqual(err.message, 'Internal Server Error');
             assert.strictEqual(err.status, 500);
+            assert.strictEqual(oAuthToken, undefined);
 
             done();
         });
@@ -87,6 +87,74 @@ describe('PitneyBowes.getOAuthToken', function() {
 describe('PitneyBowes.tracking', function() {
     this.timeout(5000);
 
+    beforeEach(function() {
+        // Clear existing token
+        cache.del('pitney-bowes-oauth-token');
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseUrl: 'invalid'
+        });
+
+        pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
+            assert.strictEqual(err.status, undefined);
+            assert.strictEqual(data, undefined);
+
+            done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206336792748927005269000010615207?packageIdentifierType=TrackingNumber&carrier=USPS"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(data, undefined);
+    
+                done();
+            });
+        });
+    });
+
+    it('should return an error for non 200 status code', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'https://httpbin.org/status/500#'
+            });
+
+            pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+                assert(err);
+                assert.strictEqual(err.message, 'Internal Server Error');
+                assert.strictEqual(err.status, 500);
+                assert.strictEqual(data, undefined);
+    
+                done();
+            });
+        });
+    });
+
     it('should return package status', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.api_key,
@@ -105,6 +173,36 @@ describe('PitneyBowes.tracking', function() {
 
 describe('PitneyBowes.tlsTest', function() {
     this.timeout(5000);
+
+    it('should return an error for invalid baseTestUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseTestUrl: 'invalid'
+        });
+
+        pitneyBowes.tlsTest(function(err, res) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/tlstest"');
+            assert.strictEqual(err.status, undefined);
+            assert.strictEqual(res, undefined);
+
+            done();
+        });
+    });
+
+    it('should return an error for non 200 status code', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseTestUrl: 'https://httpbin.org/status/500#'
+        });
+
+        pitneyBowes.tlsTest(function(err, data) {
+            assert(err);
+            assert.strictEqual(err.message, 'Internal Server Error');
+            assert.strictEqual(err.status, 500);
+            assert.strictEqual(data, undefined);
+
+            done();
+        });
+    });
 
     it('should return TLS_Connection_Success', function(done) {
         const pitneyBowes = new PitneyBowes();
