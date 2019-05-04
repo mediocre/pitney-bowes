@@ -10,7 +10,7 @@ The Pitney Bowes Complete Shipping APIs let you integrate shipping services from
 ```javascript
 const PitneyBowes = require('pitney-bowes');
 
-var pitneyBowes = new PitneyBowes({
+const pitneyBowes = new PitneyBowes({
     api_key: 'your_api_key',
     api_secret: 'your_api_secret',
     baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices'
