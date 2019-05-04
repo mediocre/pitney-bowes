@@ -125,7 +125,7 @@ describe('PitneyBowes.tracking', function() {
                 assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206336792748927005269000010615207?packageIdentifierType=TrackingNumber&carrier=USPS"');
                 assert.strictEqual(err.status, undefined);
                 assert.strictEqual(data, undefined);
-    
+
                 done();
             });
         });
@@ -149,7 +149,7 @@ describe('PitneyBowes.tracking', function() {
                 assert.strictEqual(err.message, 'Internal Server Error');
                 assert.strictEqual(err.status, 500);
                 assert.strictEqual(data, undefined);
-    
+
                 done();
             });
         });
