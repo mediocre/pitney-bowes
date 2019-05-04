@@ -12,6 +12,22 @@ describe('PitneyBowes.getOAuthToken', function() {
         cache.del('pitney-bowes-oauth-token');
     });
 
+    it('should return an error for invalid baseUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret,
+            baseUrl: 'invalid'
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
+            assert.strictEqual(err.status, undefined);
+
+            done();
+        });
+    });
+
     it('should return an error for non 200 status code', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.api_key,
