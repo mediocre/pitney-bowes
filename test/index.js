@@ -216,7 +216,7 @@ describe('PitneyBowes.tlsTest', function() {
     });
 });
 
-describe('PitneyBowes.verify', function() {
+describe('PitneyBowes.validateAddress', function() {
     this.timeout(5000);
 
     beforeEach(function() {
@@ -244,7 +244,7 @@ describe('PitneyBowes.verify', function() {
             residential: false
         };
 
-        pitneyBowes.verify({ address }, function(err, data) {
+        pitneyBowes.validateAddress({ address }, function(err, data) {
             assert(err);
             assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
             assert.strictEqual(err.status, undefined);
@@ -282,7 +282,7 @@ describe('PitneyBowes.verify', function() {
                 residential: false
             };
 
-            pitneyBowes.verify({ address }, function(err, data) {
+            pitneyBowes.validateAddress({ address }, function(err, data) {
                 assert(err);
                 assert.strictEqual(err.message, 'Invalid URI "invalid/v1/addresses/verify?minimalAddressValidation=false"');
                 assert.strictEqual(err.status, undefined);
@@ -321,7 +321,7 @@ describe('PitneyBowes.verify', function() {
                 residential: false
             };
 
-            pitneyBowes.verify({ address }, function(err, data) {
+            pitneyBowes.validateAddress({ address }, function(err, data) {
                 assert(err);
                 assert.strictEqual(err.message, 'Internal Server Error');
                 assert.strictEqual(err.status, 500);
@@ -332,39 +332,35 @@ describe('PitneyBowes.verify', function() {
         });
     });
 
-    it('should verify an address and add postal service information', function(done) {
+    it('should validate an address and add postal service information', function(done) {
         var pitneyBowes = new PitneyBowes({
             api_key: process.env.api_key,
             api_secret: process.env.api_secret
         });
 
-        pitneyBowes.getOAuthToken(function(err) {
+        const address = {
+            addressLines: [
+                '1600 Pennsylvania Avenue NW'
+            ],
+            cityTown: 'Washington',
+            stateProvince: 'DC',
+            postalCode: '20500 ',
+            countryCode: 'US',
+            company: 'Pitney Bowes Inc.',
+            name: 'John Doe',
+            phone: '203-000-0000',
+            email: 'john.d@example.com'
+        };
+
+        pitneyBowes.validateAddress({ address, minimalAddressValidation: false }, function(err, data) {
             assert.ifError(err);
+            assert.ok(data);
+            assert.strictEqual(data.carrierRoute, 'C000');
+            assert.strictEqual(data.deliveryPoint, '99');
+            assert.strictEqual(data.postalCode, '20500-0003');
+            assert.strictEqual(data.status, 'VALIDATED_AND_NOT_CHANGED');
 
-            const address = {
-                addressLines: [
-                    '1600 Pennsylvania Avenue NW'
-                ],
-                cityTown: 'Washington',
-                stateProvince: 'DC',
-                postalCode: '20500 ',
-                countryCode: 'US',
-                company: 'Pitney Bowes Inc.',
-                name: 'John Doe',
-                phone: '203-000-0000',
-                email: 'john.d@example.com'
-            };
-
-            pitneyBowes.verify({ address, minimalAddressValidation: false }, function(err, data) {
-                assert.ifError(err);
-                assert.ok(data);
-                assert.strictEqual(data.carrierRoute, 'C000');
-                assert.strictEqual(data.deliveryPoint, '99');
-                assert.strictEqual(data.postalCode, '20500-0003');
-                assert.strictEqual(data.status, 'VALIDATED_AND_NOT_CHANGED');
-
-                done();
-            });
+            done();
         });
     });
 });

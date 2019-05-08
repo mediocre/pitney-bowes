@@ -94,7 +94,7 @@ function PitneyBowes(args) {
         });
     };
 
-    this.verify = function(args, callback) {
+    this.validateAddress = function(args, callback) {
         this.getOAuthToken(function(err, oAuthToken) {
             if (err) {
                 return callback(err);

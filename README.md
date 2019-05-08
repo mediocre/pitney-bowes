@@ -3,7 +3,9 @@
 [![Build Status](https://travis-ci.org/mediocre/pitney-bowes.svg?branch=master)](https://travis-ci.org/mediocre/pitney-bowes)
 [![Coverage Status](https://coveralls.io/repos/github/mediocre/pitney-bowes/badge.svg?branch=master)](https://coveralls.io/github/mediocre/pitney-bowes?branch=master)
 
-The Pitney Bowes Complete Shipping APIs let you integrate shipping services from multiple carriers, including USPS® and Newgistics®, into your services and applications.
+The Pitney Bowes Complete Shipping APIs let you integrate shipping services from multiple carriers, including USPS® and Newgistics®, into your services and applications. 
+
+https://shipping.pitneybowes.com
 
 ## Usage
 
@@ -50,5 +52,31 @@ The minimum supported security protocol for connection to the PB Complete Shippi
 ```javascript
 pitneyBowes.tlsTest(function(err, res) {
     console.log(res);
+});
+```
+
+### pitneyBowes.validateAddress(args, callback)
+
+Address validation verifies and cleanses postal addresses within the United States to help ensure packages are rated accurately and shipments arrive at their final destinations on time. The Validate Address operation sends an address to be verified. The response indicates whether the address is valid and whether the validation check made changes to the address.
+
+**Example**
+
+```javascript
+const address = {
+    addressLines: [
+        '1600 Pennsylvania Avenue NW'
+    ],
+    cityTown: 'Washington',
+    stateProvince: 'DC',
+    postalCode: '20500 ',
+    countryCode: 'US',
+    company: 'Pitney Bowes Inc.',
+    name: 'John Doe',
+    phone: '203-000-0000',
+    email: 'john.d@example.com'
+};
+
+pitneyBowes.validateAddress({ address, minimalAddressValidation: false }, function(err, data) {
+    console.log(data);
 });
 ```
