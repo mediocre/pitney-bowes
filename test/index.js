@@ -260,7 +260,7 @@ describe('PitneyBowes.verify', function() {
             api_secret: process.env.api_secret
         });
 
-        pitneyBowes.getOAuthToken(function(err, oAuthToken) {
+        pitneyBowes.getOAuthToken(function(err) {
             assert.ifError(err);
 
             pitneyBowes = new PitneyBowes({
