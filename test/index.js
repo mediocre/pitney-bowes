@@ -219,6 +219,80 @@ describe('PitneyBowes.tlsTest', function() {
 describe('PitneyBowes.verify', function() {
     this.timeout(5000);
 
+    beforeEach(function() {
+        // Clear existing token
+        cache.del('pitney-bowes-oauth-token');
+    });
+
+    it('should return an error an invalid baseUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseUrl: 'invalid'
+        });
+
+        const address = {
+            addressLines: [
+                '1600 Pennsylvania Avenue NW'
+            ],
+            cityTown: 'Washington',
+            stateProvince: 'DC',
+            postalCode: '20500 ',
+            countryCode: 'US',
+            company: 'Pitney Bowes Inc.',
+            name: 'John Doe',
+            phone: '203-000-0000',
+            email: 'john.d@example.com',
+            residential: false
+        };
+
+        pitneyBowes.verify({ address }, function(err, data) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
+            assert.strictEqual(err.status, undefined);
+            assert.strictEqual(data, undefined);
+
+            done();
+        });
+    });
+
+    it('should return an error an invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err, oAuthToken) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            const address = {
+                addressLines: [
+                    '1600 Pennsylvania Avenue NW'
+                ],
+                cityTown: 'Washington',
+                stateProvince: 'DC',
+                postalCode: '20500 ',
+                countryCode: 'US',
+                company: 'Pitney Bowes Inc.',
+                name: 'John Doe',
+                phone: '203-000-0000',
+                email: 'john.d@example.com',
+                residential: false
+            };
+
+            pitneyBowes.verify({ address }, function(err, data) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/addresses/verify?minimalAddressValidation=false"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(data, undefined);
+
+                done();
+            });
+        });
+    });
+
     it('should return an error for non 200 status code', function(done) {
         var pitneyBowes = new PitneyBowes({
             api_key: process.env.api_key,
