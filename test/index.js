@@ -1,8 +1,158 @@
 const assert = require('assert');
+const crypto = require('crypto');
 
 const cache = require('memory-cache');
 
 const PitneyBowes = require('../index');
+
+describe('PitneyBowes.createShipment', function() {
+    this.timeout(5000);
+
+    beforeEach(function() {
+        // Clear existing token
+        cache.del('pitney-bowes-oauth-token');
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseUrl: 'invalid'
+        });
+
+        pitneyBowes.createShipment({}, {}, function(err, shipment) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
+            assert.strictEqual(err.status, undefined);
+            assert.strictEqual(shipment, undefined);
+
+            done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            pitneyBowes.createShipment({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/shipments"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
+        });
+    });
+
+    it('should return an error for non 200 status code', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'https://httpbin.org/status/500#'
+            });
+
+            pitneyBowes.createShipment({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Internal Server Error');
+                assert.strictEqual(err.status, 500);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
+        });
+    });
+
+    it('should return a valid response', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        const options = {
+            integratorCarrierId: '987654321',
+            shipmentGroupId: '500002',
+            transactionId: crypto.randomBytes(12).toString('hex')
+        };
+
+        const shipment = {
+            documents: [
+                {
+                    contentType: 'BASE64',
+                    fileFormat: 'ZPL2',
+                    printDialogOption: 'NO_PRINT_DIALOG',
+                    size: 'DOC_6X4',
+                    type: 'SHIPPING_LABEL'
+                }
+            ],
+            fromAddress: {
+                addressLines: ['4750 Walnut Street'],
+                cityTown: 'Boulder',
+                countryCode: 'US',
+                name: 'Pitney Bowes',
+                postalCode: '80301',
+                stateProvince: 'CO'
+            },
+            parcel: {
+                dimension: {
+                    height: 9,
+                    length: 12,
+                    unitOfMeasurement: 'IN',
+                    width: 0.25
+                },
+                weight: {
+                    unitOfMeasurement: 'OZ',
+                    weight: 3
+                }
+            },
+            rates: [
+                {
+                    carrier: 'PBPRESORT',
+                    parcelType: 'LGENV',
+                    serviceId: 'BPM'
+                }
+            ],
+            shipmentOptions: [
+                {
+                    name: 'PERMIT_NUMBER',
+                    value: '1234'
+                },
+                {
+                    name: 'SHIPPER_ID',
+                    value: '9015544760'
+                }
+            ],
+            toAddress: {
+                addressLines: ['114 Whitney Ave'],
+                cityTown: 'New Haven',
+                countryCode: 'US',
+                name: 'John Doe',
+                postalCode: '06510',
+                stateProvince: 'CT'
+            }
+        };
+
+        pitneyBowes.createShipment(shipment, options, function(err, shipment) {
+            assert.ifError(err);
+            assert(shipment.documents[0].pages[0].contents);
+
+            done();
+        });
+    });
+});
 
 describe('PitneyBowes.getOAuthToken', function() {
     this.timeout(5000);

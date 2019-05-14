@@ -10,6 +10,48 @@ function PitneyBowes(args) {
         baseTestUrl: 'https://api-test.pitneybowes.com'
     }, args);
 
+    this.createShipment = function(shipment, _options, callback) {
+        this.getOAuthToken(function(err, oAuthToken) {
+            if (err) {
+                return callback(err);
+            }
+
+            const req = {
+                auth: {
+                    bearer: oAuthToken.access_token
+                },
+                headers: {},
+                json: shipment,
+                method: 'POST',
+                url: `${options.baseUrl}/v1/shipments`
+            };
+
+            if (_options.integratorCarrierId) {
+                req.headers['X-PB-Integrator-CarrierId'] = _options.integratorCarrierId;
+            }
+
+            if (_options.shipmentGroupId) {
+                req.headers['X-PB-ShipmentGroupId'] = _options.shipmentGroupId;
+            }
+
+            if (_options.transactionId) {
+                req.headers['X-PB-TransactionId'] = _options.transactionId;
+            }
+
+            request(req, function(err, res, body) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (res.statusCode !== 201) {
+                    return callback(createError(res.statusCode, body));
+                }
+
+                callback(null, body);
+            });
+        });
+    };
+
     this.getOAuthToken = function(callback) {
         // Try to get the token from memory cache
         const oAuthToken = cache.get('pitney-bowes-oauth-token');
