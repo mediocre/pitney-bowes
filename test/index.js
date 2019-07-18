@@ -311,10 +311,10 @@ describe('PitneyBowes.tracking', function() {
             api_secret: process.env.api_secret
         });
 
-        pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+        pitneyBowes.tracking({ trackingNumber: '4204540992748927005269000020006828' }, function(err, data) {
             assert.ifError(err);
             assert(data);
-            assert.strictEqual(data.trackingNumber, '4206336792748927005269000010615207');
+            assert.strictEqual(data.trackingNumber, '4204540992748927005269000020006828');
 
             done();
         });
