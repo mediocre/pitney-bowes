@@ -44,7 +44,7 @@ function PitneyBowes(args) {
                 }
 
                 if (res.statusCode !== 201) {
-                    return callback(createError(res.statusCode, body));
+                    return callback(createError(res.statusCode, body.length && body[0].message ? body[0] : body));
                 }
 
                 callback(null, body);
