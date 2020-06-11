@@ -1,4 +1,6 @@
+.coveralls.yml
 .eslint*\
+.github
 .travis.yml
 coverage
 test
