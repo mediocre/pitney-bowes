@@ -30,8 +30,8 @@ describe('PitneyBowes.createShipment', function() {
 
     it('should return an error for invalid baseUrl', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -54,8 +54,8 @@ describe('PitneyBowes.createShipment', function() {
 
     it('should return an error for non 200 status code', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -78,8 +78,8 @@ describe('PitneyBowes.createShipment', function() {
 
     it('should return a valid response', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         const options = {
@@ -179,8 +179,8 @@ describe('PitneyBowes.getOAuthToken', function() {
 
     it('should return an error for non 200 status code', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret,
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET,
             baseUrl: 'https://httpbin.org/status/500#'
         });
 
@@ -196,8 +196,8 @@ describe('PitneyBowes.getOAuthToken', function() {
 
     it('should return a valid oAuthToken', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err, oAuthToken) {
@@ -217,8 +217,8 @@ describe('PitneyBowes.getOAuthToken', function() {
 
     it('should return the same token on subsequent calls', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err, token1) {
@@ -259,8 +259,8 @@ describe('PitneyBowes.rate', function() {
 
     it('should return an error for invalid baseUrl', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -283,8 +283,8 @@ describe('PitneyBowes.rate', function() {
 
     it('should return an error for non 200 status code', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -307,8 +307,8 @@ describe('PitneyBowes.rate', function() {
 
     it('should return a valid response', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         const options = {
@@ -387,8 +387,8 @@ describe('PitneyBowes.tracking', function() {
 
     it('should return an error for invalid baseUrl', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -411,8 +411,8 @@ describe('PitneyBowes.tracking', function() {
 
     it('should return an error for non 200 status code', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -433,11 +433,10 @@ describe('PitneyBowes.tracking', function() {
         });
     });
 
-    // There are no sandbox tracking numbers that return known-good status, so this is a LIVE number. It will evenutally expire and this test will fail.
     it('should return package status', function(done) {
         const pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
@@ -535,8 +534,8 @@ describe('PitneyBowes.validateAddress', function() {
 
     it('should return an error an invalid baseUrl', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -574,8 +573,8 @@ describe('PitneyBowes.validateAddress', function() {
 
     it('should return an error for non 200 status code', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         pitneyBowes.getOAuthToken(function(err) {
@@ -613,8 +612,8 @@ describe('PitneyBowes.validateAddress', function() {
 
     it('should validate an address and add postal service information', function(done) {
         var pitneyBowes = new PitneyBowes({
-            api_key: process.env.api_key,
-            api_secret: process.env.api_secret
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
         });
 
         const address = {
