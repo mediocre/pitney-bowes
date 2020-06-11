@@ -305,16 +305,17 @@ describe('PitneyBowes.tracking', function() {
         });
     });
 
+    // There are no sandbox tracking numbers that return known-good status, so this is a LIVE number. It will evenutally expire and this test will fail.
     it('should return package status', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.api_key,
             api_secret: process.env.api_secret
         });
 
-        pitneyBowes.tracking({ trackingNumber: '4204540992748927005269000020006828' }, function(err, data) {
+        pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
             assert.ifError(err);
             assert(data);
-            assert.strictEqual(data.trackingNumber, '4204540992748927005269000020006828');
+            assert.strictEqual(data.trackingNumber, '4206311892612927005269000081323326');
 
             done();
         });
