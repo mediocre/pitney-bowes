@@ -433,6 +433,7 @@ describe('PitneyBowes.tracking', function() {
         });
     });
 
+    // There are no sandbox tracking numbers that return known-good status, so this is a LIVE number. It will evenutally expire and this test will fail.
     it('should return package status', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.api_key,
