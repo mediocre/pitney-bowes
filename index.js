@@ -88,6 +88,36 @@ function PitneyBowes(args) {
         });
     };
 
+    this.rate = function(shipment, _options, callback) {
+        this.getOAuthToken(function(err, oAuthToken) {
+            if (err) {
+                return callback(err);
+            }
+
+            const req = {
+                auth: {
+                    bearer: oAuthToken.access_token
+                },
+                headers: {},
+                json: shipment,
+                method: 'POST',
+                url: `${options.baseUrl}/v1/rates`
+            };
+
+            request(req, function(err, res, body) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (res.statusCode !== 200) {
+                    return callback(createError(res.statusCode, body && body.length && body[0].message ? body[0] : body));
+                }
+
+                callback(null, body);
+            });
+        });
+    };
+
     this.tracking = function(args, callback) {
         this.getOAuthToken(function(err, oAuthToken) {
             if (err) {

@@ -234,6 +234,134 @@ describe('PitneyBowes.getOAuthToken', function() {
     });
 });
 
+describe('PitneyBowes.rate', function() {
+    this.timeout(5000);
+
+    beforeEach(function() {
+        // Clear existing token
+        cache.del('pitney-bowes-oauth-token');
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseUrl: 'invalid'
+        });
+
+        pitneyBowes.rate({}, {}, function(err, shipment) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
+            assert.strictEqual(err.status, undefined);
+            assert.strictEqual(shipment, undefined);
+
+            done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            pitneyBowes.rate({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/rates"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
+        });
+    });
+
+    it('should return an error for non 200 status code', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'https://httpbin.org/status/500#'
+            });
+
+            pitneyBowes.rate({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Internal Server Error');
+                assert.strictEqual(err.status, 500);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
+        });
+    });
+
+    it('should return a valid response', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.api_key,
+            api_secret: process.env.api_secret
+        });
+
+        const options = {
+            integratorCarrierId: '987654321',
+            shipmentGroupId: '500002',
+            transactionId: crypto.randomBytes(12).toString('hex')
+        };
+
+        const shipment = {
+            fromAddress: {
+                addressLines: ['4750 Walnut Street'],
+                cityTown: 'Boulder',
+                countryCode: 'US',
+                name: 'Pitney Bowes',
+                postalCode: '80301',
+                stateProvince: 'CO'
+            },
+            parcel: {
+                dimension: {
+                    height: 9,
+                    length: 12,
+                    unitOfMeasurement: 'IN',
+                    width: 0.25
+                },
+                weight: {
+                    unitOfMeasurement: 'OZ',
+                    weight: 3
+                }
+            },
+            rates: [
+                {
+                    carrier: 'USPS'
+                }
+            ],
+            toAddress: {
+                addressLines: ['114 Whitney Ave'],
+                cityTown: 'New Haven',
+                countryCode: 'US',
+                name: 'John Doe',
+                postalCode: '06510',
+                stateProvince: 'CT'
+            }
+        };
+
+        pitneyBowes.rate(shipment, options, function(err, rate) {
+            assert.ifError(err);
+            assert(rate.rates.length > 0);
+
+            done();
+        });
+    });
+});
+
 describe('PitneyBowes.tracking', function() {
     this.timeout(5000);
 
@@ -247,7 +375,7 @@ describe('PitneyBowes.tracking', function() {
             baseUrl: 'invalid'
         });
 
-        pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+        pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
             assert(err);
             assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
             assert.strictEqual(err.status, undefined);
@@ -270,9 +398,9 @@ describe('PitneyBowes.tracking', function() {
                 baseUrl: 'invalid'
             });
 
-            pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+            pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
                 assert(err);
-                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206336792748927005269000010615207?packageIdentifierType=TrackingNumber&carrier=USPS"');
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206311892612927005269000081323326?packageIdentifierType=TrackingNumber&carrier=USPS"');
                 assert.strictEqual(err.status, undefined);
                 assert.strictEqual(data, undefined);
 
@@ -294,7 +422,7 @@ describe('PitneyBowes.tracking', function() {
                 baseUrl: 'https://httpbin.org/status/500#'
             });
 
-            pitneyBowes.tracking({ trackingNumber: '4206336792748927005269000010615207' }, function(err, data) {
+            pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
                 assert(err);
                 assert.strictEqual(err.message, 'Internal Server Error');
                 assert.strictEqual(err.status, 500);
@@ -311,10 +439,10 @@ describe('PitneyBowes.tracking', function() {
             api_secret: process.env.api_secret
         });
 
-        pitneyBowes.tracking({ trackingNumber: '4204540992748927005269000020006828' }, function(err, data) {
+        pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
             assert.ifError(err);
             assert(data);
-            assert.strictEqual(data.trackingNumber, '4204540992748927005269000020006828');
+            assert.strictEqual(data.trackingNumber, '4206311892612927005269000081323326');
 
             done();
         });
