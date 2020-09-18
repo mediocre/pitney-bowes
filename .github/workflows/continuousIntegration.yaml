@@ -4,17 +4,13 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.16.3]
+    runs-on: ubuntu-18.04
 
     steps:
-    - name: Setup Node ${{ matrix.node-version }}
+    - name: Setup Node 14.10.1
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 14.10.1
 
     - name: Checkout from Git
       uses: actions/checkout@v2
@@ -32,6 +28,9 @@ jobs:
 
     - name: Run tests and coverage report
       run: npm run coveralls
+      env:
+        API_KEY: ${{ secrets.API_KEY }}
+        API_SECRET: ${{ secrets.API_SECRET }}
 
     - name: Notify Slack
       if: always()
