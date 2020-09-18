@@ -29,6 +29,7 @@ jobs:
     - name: Run tests and coverage report
       run: npm run coveralls
       env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
         API_KEY: ${{ secrets.API_KEY }}
         API_SECRET: ${{ secrets.API_SECRET }}
 
