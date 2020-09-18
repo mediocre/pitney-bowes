@@ -634,8 +634,8 @@ describe('PitneyBowes.validateAddress', function() {
             assert.ifError(err);
             assert.ok(data);
             assert.strictEqual(data.carrierRoute, 'C000');
-            assert.strictEqual(data.deliveryPoint, '99');
-            assert.strictEqual(data.postalCode, '20500-0003');
+            assert.strictEqual(data.deliveryPoint, '00');
+            assert.strictEqual(data.postalCode, '20500-0005');
             assert.strictEqual(data.status, 'VALIDATED_AND_NOT_CHANGED');
 
             done();
