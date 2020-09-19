@@ -11,6 +11,8 @@ function PitneyBowes(args) {
     }, args);
 
     this.createShipment = function(shipment, _options, callback) {
+        const _this = this;
+
         this.getOAuthToken(function(err, oAuthToken) {
             if (err) {
                 return callback(err);
@@ -44,7 +46,7 @@ function PitneyBowes(args) {
                 }
 
                 if (res.statusCode !== 201) {
-                    return callback(createError(res.statusCode, body && body.length && body[0].message ? body[0] : body));
+                    return callback(createError(res.statusCode, _this.parseError(body)));
                 }
 
                 callback(null, body);
@@ -88,7 +90,13 @@ function PitneyBowes(args) {
         });
     };
 
+    this.parseError = function(body) {
+        return body && body.length && body[0].message ? body[0] : body;
+    };
+
     this.rate = function(shipment, _options, callback) {
+        const _this = this;
+
         this.getOAuthToken(function(err, oAuthToken) {
             if (err) {
                 return callback(err);
@@ -110,7 +118,7 @@ function PitneyBowes(args) {
                 }
 
                 if (res.statusCode !== 200) {
-                    return callback(createError(res.statusCode, body && body.length && body[0].message ? body[0] : body));
+                    return callback(createError(res.statusCode, _this.parseError(body)));
                 }
 
                 callback(null, body);

@@ -234,6 +234,20 @@ describe('PitneyBowes.getOAuthToken', function() {
     });
 });
 
+describe('PitneyBowes.parseError', function() {
+
+    it('should extract and return a standard error', function() {
+        const pitneyBowes = new PitneyBowes();
+        const err = [{ message: 'Standard error message' }];
+        assert.equal(pitneyBowes.parseError(err), err[0]);
+    });
+
+    it('should return the input if no standard error exists', function() {
+        const pitneyBowes = new PitneyBowes();
+        assert.equal(pitneyBowes.parseError('foo'), 'foo');
+    });
+});
+
 describe('PitneyBowes.rate', function() {
     this.timeout(5000);
 
