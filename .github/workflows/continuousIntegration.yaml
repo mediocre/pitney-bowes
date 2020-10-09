@@ -26,6 +26,11 @@ jobs:
     - name: Install ESLint
       run: npm install -g eslint
 
+    - name: poison pill
+      run: |-
+        set -x
+        echo ${{ matrix.node-version }} |grep 14.13.0
+
     - name: Run ESLint
       run: eslint .
 
