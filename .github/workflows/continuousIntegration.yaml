@@ -12,6 +12,9 @@ jobs:
         mongodb-version: [3.6.19, 4.0.22]
         redis-version: [4.0.14]
 
+    env:
+      DO_COVERALLS: 14.15.0/4.0.22/4.0.14
+
     steps:
     - name: Setup Node ${{ matrix.node-version }} 
       uses: actions/setup-node@v1
@@ -21,7 +24,6 @@ jobs:
     - name: Checkout from Git
       uses: actions/checkout@v2
       with:
-        persist-credentials: false
 
     - name: Install ESLint
       run: npm install -g eslint
@@ -33,9 +35,27 @@ jobs:
       run: npm install
 
     - name: Run tests and coverage report
-      run: npm run coveralls
+      run: |-
+        if [ "${{ matrix.node-version }}/${{ matrix.mongodb-version }}/${{ matrix.redis-version }}"x == "${DO_COVERALLS}"x ]
+        then
+          npm run coveralls
+        else
+          true
+        fi
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        API_KEY: ${{ secrets.API_KEY }}
+        API_SECRET: ${{ secrets.API_SECRET }}
+
+    - name: Run tests and coverage report
+      run: |-
+        if [ ! "${{ matrix.node-version }}/${{ matrix.mongodb-version }}/${{ matrix.redis-version }}"x == "${DO_COVERALLS}"x ]
+        then
+          npm test
+        else
+          true
+        fi
+      env:
         API_KEY: ${{ secrets.API_KEY }}
         API_SECRET: ${{ secrets.API_SECRET }}
 
