@@ -24,6 +24,8 @@ jobs:
     - name: Checkout from Git
       uses: actions/checkout@v2
       with:
+        persist-credentials: false
+
 
     - name: Install ESLint
       run: npm install -g eslint
