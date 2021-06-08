@@ -1,7 +1,7 @@
 # pitney-bowes
 
-[![Build Status](https://travis-ci.org/mediocre/pitney-bowes.svg?branch=master)](https://travis-ci.org/mediocre/pitney-bowes)
-[![Coverage Status](https://coveralls.io/repos/github/mediocre/pitney-bowes/badge.svg?branch=master)](https://coveralls.io/github/mediocre/pitney-bowes?branch=master)
+[![Build Status](https://travis-ci.org/mediocre/pitney-bowes.svg?branch=main)](https://travis-ci.org/mediocre/pitney-bowes)
+[![Coverage Status](https://coveralls.io/repos/github/mediocre/pitney-bowes/badge.svg?branch=main)](https://coveralls.io/github/mediocre/pitney-bowes?branch=main)
 
 The Pitney Bowes Complete Shipping APIs let you integrate shipping services from multiple carriers, including USPS® and Newgistics®, into your services and applications. 
 
