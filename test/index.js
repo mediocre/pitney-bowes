@@ -9,7 +9,6 @@ describe('PitneyBowes.createShipment', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing OAuth tokens
         cache.clear();
     });
 
@@ -25,6 +24,33 @@ describe('PitneyBowes.createShipment', function() {
             assert.strictEqual(shipment, undefined);
 
             done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.getOAuthToken(function(err, token) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            // Update cache
+            cache.put('invalid/oauth/token', token, token.expiresIn * 1000 / 2);
+
+            pitneyBowes.createShipment({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/shipments"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
         });
     });
 
@@ -134,7 +160,6 @@ describe('PitneyBowes.getOAuthToken', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing OAuth tokens
         cache.clear();
     });
 
@@ -214,7 +239,6 @@ describe('PitneyBowes.rate', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing OAuth tokens
         cache.clear();
     });
 
@@ -230,6 +254,33 @@ describe('PitneyBowes.rate', function() {
             assert.strictEqual(shipment, undefined);
 
             done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.getOAuthToken(function(err, token) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            // Update cache
+            cache.put('invalid/oauth/token', token, token.expiresIn * 1000 / 2);
+
+            pitneyBowes.rate({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/rates"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
         });
     });
 
@@ -318,7 +369,6 @@ describe('PitneyBowes.tracking', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing OAuth tokens
         cache.clear();
     });
 
@@ -334,6 +384,33 @@ describe('PitneyBowes.tracking', function() {
             assert.strictEqual(data, undefined);
 
             done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.getOAuthToken(function(err, token) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            // Update cache
+            cache.put('invalid/oauth/token', token, token.expiresIn * 1000 / 2);
+
+            pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206311892612927005269000081323326?packageIdentifierType=TrackingNumber&carrier=USPS"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(data, undefined);
+
+                done();
+            });
         });
     });
 
@@ -426,7 +503,6 @@ describe('PitneyBowes.validateAddress', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing OAuth tokens
         cache.clear();
     });
 
@@ -457,6 +533,48 @@ describe('PitneyBowes.validateAddress', function() {
             assert.strictEqual(data, undefined);
 
             done();
+        });
+    });
+
+    it('should return an error an invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.getOAuthToken(function(err, token) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            // Update cache
+            cache.put('invalid/oauth/token', token, token.expiresIn * 1000 / 2);
+
+            const address = {
+                addressLines: [
+                    '1600 Pennsylvania Avenue NW'
+                ],
+                cityTown: 'Washington',
+                stateProvince: 'DC',
+                postalCode: '20500 ',
+                countryCode: 'US',
+                company: 'Pitney Bowes Inc.',
+                name: 'John Doe',
+                phone: '203-000-0000',
+                email: 'john.d@example.com',
+                residential: false
+            };
+
+            pitneyBowes.validateAddress({ address }, function(err, data) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/addresses/verify?minimalAddressValidation=false"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(data, undefined);
+
+                done();
+            });
         });
     });
 
