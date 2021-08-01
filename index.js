@@ -134,7 +134,7 @@ function PitneyBowes(args) {
                 },
                 json: true,
                 method: 'GET',
-                url: `${options.baseUrl}/v1/tracking/${args.trackingNumber}?&carrier=${args.carrier || 'USPS'}`
+                url: `${options.baseUrl}/v1/tracking/${args.trackingNumber}?carrier=${args.carrier || 'USPS'}`
             };
 
             request(req, function(err, res, body) {
