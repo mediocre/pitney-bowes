@@ -1,5 +1,5 @@
 .coveralls.yml
-.eslint*\
+.eslintrc.js
 .github
 .travis.yml
 coverage
