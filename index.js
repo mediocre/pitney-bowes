@@ -1,5 +1,3 @@
-const crypto = require('crypto');
-
 const cache = require('memory-cache');
 const createError = require('http-errors');
 const request = require('request');
@@ -55,13 +53,10 @@ function PitneyBowes(args) {
     };
 
     this.getOAuthToken = function(callback) {
-        // Generate a random cache key
-        if (!this._oAuthTokenCacheKey) {
-            this._oAuthTokenCacheKey = crypto.randomBytes(16).toString('hex');
-        }
+        const url = `${options.baseUrl.replace('/shippingservices', '')}/oauth/token`;
 
         // Try to get the token from memory cache
-        const oAuthToken = cache.get(this._oAuthTokenCacheKey);
+        const oAuthToken = cache.get(url);
 
         if (oAuthToken) {
             return callback(null, oAuthToken);
@@ -76,7 +71,7 @@ function PitneyBowes(args) {
             },
             json: true,
             method: 'POST',
-            url: `${options.baseUrl.replace('/shippingservices', '')}/oauth/token`
+            url
         };
 
         request(req, function(err, res, body) {
@@ -89,7 +84,7 @@ function PitneyBowes(args) {
             }
 
             // Put the token in memory cache
-            cache.put(this._oAuthTokenCacheKey, body, body.expiresIn * 1000 / 2);
+            cache.put(url, body, body.expiresIn * 1000 / 2);
 
             callback(null, body);
         });
