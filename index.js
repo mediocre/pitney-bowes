@@ -6,7 +6,7 @@ function PitneyBowes(args) {
     const options = Object.assign({
         api_key: '',
         api_secret: '',
-        baseUrl: 'https://api-sandbox.pitneybowes.com/shippingservices',
+        baseUrl: 'https://shipping-api-sandbox.pitneybowes.com/shippingservices',
         baseTestUrl: 'https://api-test.pitneybowes.com'
     }, args);
 
@@ -73,6 +73,10 @@ function PitneyBowes(args) {
         };
 
         request(req, function(err, res, body) {
+            console.dir(req, { depth: null });
+            console.dir(err, { depth: null });
+            console.dir(body, { depth: null });
+
             if (err) {
                 return callback(err);
             }
@@ -134,6 +138,10 @@ function PitneyBowes(args) {
             };
 
             request(req, function(err, res, body) {
+                console.dir(req, { depth: null });
+                console.dir(err, { depth: null });
+                console.dir(body, { depth: null });
+
                 if (err) {
                     return callback(err);
                 }
