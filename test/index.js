@@ -400,7 +400,7 @@ describe('PitneyBowes.tracking', function() {
 
             pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
                 assert(err);
-                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206311892612927005269000081323326?carrier=USPS"');
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/tracking/4206311892612927005269000081323326?packageIdentifierType=TrackingNumber&carrier=USPS"');
                 assert.strictEqual(err.status, undefined);
                 assert.strictEqual(data, undefined);
 
