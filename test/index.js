@@ -433,16 +433,16 @@ describe('PitneyBowes.tracking', function() {
         });
     });
 
-    it.skip('should return package status', function(done) {
+    it('should return package status', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.API_KEY,
             api_secret: process.env.API_SECRET
         });
 
-        pitneyBowes.tracking({ trackingNumber: '4206311892612927005269000081323326' }, function(err, data) {
+        pitneyBowes.tracking({ trackingNumber: '4201000392612927005694000000000019' }, function(err, data) {
             assert.ifError(err);
             assert(data);
-            assert.strictEqual(data.trackingNumber, '4206311892612927005269000081323326');
+            assert.strictEqual(data.trackingNumber, '4201000392612927005694000000000019');
 
             done();
         });
