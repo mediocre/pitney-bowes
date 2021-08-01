@@ -439,7 +439,7 @@ describe('PitneyBowes.tracking', function() {
             api_secret: process.env.API_SECRET
         });
 
-        pitneyBowes.tracking({ trackingNumber: '4201000392612927005694000000000019' }, function(err, data) {
+        pitneyBowes.tracking({ carrier: 'FDR', trackingNumber: '4201000392612927005694000000000019' }, function(err, data) {
             assert.ifError(err);
             assert(data);
             assert.strictEqual(data.trackingNumber, '4201000392612927005694000000000019');
