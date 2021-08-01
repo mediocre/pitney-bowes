@@ -9,8 +9,8 @@ describe('PitneyBowes.createShipment', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing token
-        cache.del('pitney-bowes-oauth-token');
+        // Clear existing OAuth tokens
+        cache.clear();
     });
 
     it('should return an error for invalid baseUrl', function(done) {
@@ -158,8 +158,8 @@ describe('PitneyBowes.getOAuthToken', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing token
-        cache.del('pitney-bowes-oauth-token');
+        // Clear existing OAuth tokens
+        cache.clear();
     });
 
     it('should return an error for invalid baseUrl', function(done) {
@@ -238,8 +238,8 @@ describe('PitneyBowes.rate', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing token
-        cache.del('pitney-bowes-oauth-token');
+        // Clear existing OAuth tokens
+        cache.clear();
     });
 
     it('should return an error for invalid baseUrl', function(done) {
@@ -366,8 +366,8 @@ describe('PitneyBowes.tracking', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing token
-        cache.del('pitney-bowes-oauth-token');
+        // Clear existing OAuth tokens
+        cache.clear();
     });
 
     it('should return an error for invalid baseUrl', function(done) {
@@ -433,7 +433,7 @@ describe('PitneyBowes.tracking', function() {
         });
     });
 
-    it('should return package status', function(done) {
+    it.skip('should return package status', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.API_KEY,
             api_secret: process.env.API_SECRET
@@ -498,8 +498,8 @@ describe('PitneyBowes.validateAddress', function() {
     this.timeout(5000);
 
     beforeEach(function() {
-        // Clear existing token
-        cache.del('pitney-bowes-oauth-token');
+        // Clear existing OAuth tokens
+        cache.clear();
     });
 
     it('should return an error an invalid baseUrl', function(done) {

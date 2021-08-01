@@ -75,10 +75,6 @@ function PitneyBowes(args) {
         };
 
         request(req, function(err, res, body) {
-            console.dir(req, { depth: null });
-            console.dir(err, { depth: null });
-            console.dir(body, { depth: null });
-
             if (err) {
                 return callback(err);
             }
@@ -140,10 +136,6 @@ function PitneyBowes(args) {
             };
 
             request(req, function(err, res, body) {
-                console.dir(req, { depth: null });
-                console.dir(err, { depth: null });
-                console.dir(body, { depth: null });
-
                 if (err) {
                     return callback(err);
                 }
