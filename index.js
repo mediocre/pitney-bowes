@@ -84,7 +84,7 @@ function PitneyBowes(args) {
             }
 
             // Put the token in memory cache
-            cache.put('pitney-bowes-oauth-token', body, body.expiresIn * 1000 / 2);
+            cache.put(url, body, body.expiresIn * 1000 / 2);
 
             callback(null, body);
         });
