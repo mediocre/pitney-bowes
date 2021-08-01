@@ -53,8 +53,10 @@ function PitneyBowes(args) {
     };
 
     this.getOAuthToken = function(callback) {
+        const url = `${options.baseUrl.replace('/shippingservices', '')}/oauth/token`;
+
         // Try to get the token from memory cache
-        const oAuthToken = cache.get('pitney-bowes-oauth-token');
+        const oAuthToken = cache.get(url);
 
         if (oAuthToken) {
             return callback(null, oAuthToken);
@@ -69,7 +71,7 @@ function PitneyBowes(args) {
             },
             json: true,
             method: 'POST',
-            url: `${options.baseUrl.replace('/shippingservices', '')}/oauth/token`
+            url
         };
 
         request(req, function(err, res, body) {
