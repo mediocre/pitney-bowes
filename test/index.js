@@ -156,6 +156,112 @@ describe('PitneyBowes.createShipment', function() {
     });
 });
 
+describe.only('PitneyBowes.createManifest', function() {
+    this.timeout(5000);
+
+    beforeEach(function() {
+        cache.clear();
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            baseUrl: 'invalid'
+        });
+
+        pitneyBowes.createManifest({}, {}, function(err, shipment) {
+            assert(err);
+            assert.strictEqual(err.message, 'Invalid URI "invalid/oauth/token"');
+            assert.strictEqual(err.status, undefined);
+            assert.strictEqual(shipment, undefined);
+
+            done();
+        });
+    });
+
+    it('should return an error for invalid baseUrl', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.getOAuthToken(function(err, token) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'invalid'
+            });
+
+            // Update cache
+            cache.put('invalid/oauth/token', token, token.expiresIn * 1000 / 2);
+
+            pitneyBowes.createManifest({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Invalid URI "invalid/v1/manifests"');
+                assert.strictEqual(err.status, undefined);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
+        });
+    });
+
+    it('should return an error for non 200 status code', function(done) {
+        var pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.getOAuthToken(function(err) {
+            assert.ifError(err);
+
+            pitneyBowes = new PitneyBowes({
+                baseUrl: 'https://httpbin.org/status/500#'
+            });
+
+            pitneyBowes.createManifest({}, {}, function(err, shipment) {
+                assert(err);
+                assert.strictEqual(err.message, 'Internal Server Error');
+                assert.strictEqual(err.status, 500);
+                assert.strictEqual(shipment, undefined);
+
+                done();
+            });
+        });
+    });
+
+    it('should return a valid response', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        const options = {
+            transactionId: crypto.randomBytes(12).toString('hex')
+        };
+
+        const manifest = {
+            carrier: 'NEWGISTICS',
+            parameters: [
+                {
+                    name: 'SHIPPER_ID',
+                    value: '9015544760'
+                },
+                {
+                    name: 'CLIENT_ID',
+                    value: 'NGST'
+                }
+            ]
+        };
+
+        pitneyBowes.createManifest(manifest, options, function(err, manifest) {
+            assert.ifError(err);
+            assert(manifest);
+
+            done();
+        });
+    });
+});
+
 describe('PitneyBowes.getOAuthToken', function() {
     this.timeout(5000);
 
