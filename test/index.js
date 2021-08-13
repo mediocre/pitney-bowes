@@ -156,7 +156,7 @@ describe('PitneyBowes.createShipment', function() {
     });
 });
 
-describe.only('PitneyBowes.createManifest', function() {
+describe('PitneyBowes.createManifest', function() {
     this.timeout(5000);
 
     beforeEach(function() {
