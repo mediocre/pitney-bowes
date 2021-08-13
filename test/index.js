@@ -78,6 +78,22 @@ describe('PitneyBowes.createShipment', function() {
         });
     });
 
+    it('should return an error when no shipment is specified', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.createShipment({}, {}, function(err, shipment) {
+            assert(err);
+            assert.strictEqual(err.message, 'Bad Request');
+            assert.strictEqual(err.status, 400);
+            assert.strictEqual(shipment, undefined);
+
+            done();
+        });
+    });
+
     it('should return a valid response', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.API_KEY,
@@ -226,6 +242,22 @@ describe('PitneyBowes.createManifest', function() {
 
                 done();
             });
+        });
+    });
+
+    it('should return an error when no manifest is specified', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.createManifest({}, {}, function(err, manifest) {
+            assert(err);
+            assert.strictEqual(err.message, 'Bad Request');
+            assert.strictEqual(err.status, 400);
+            assert.strictEqual(manifest, undefined);
+
+            done();
         });
     });
 
@@ -414,6 +446,21 @@ describe('PitneyBowes.rate', function() {
         });
     });
 
+    it('should return an error when no shipment is specified', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.rate({}, {}, function(err, rate) {
+            assert(err);
+            assert.strictEqual(err.status, 400);
+            assert.strictEqual(rate, undefined);
+
+            done();
+        });
+    });
+
     it('should return a valid response', function(done) {
         const pitneyBowes = new PitneyBowes({
             api_key: process.env.API_KEY,
@@ -541,6 +588,22 @@ describe('PitneyBowes.tracking', function() {
 
                 done();
             });
+        });
+    });
+
+    it('should return error when no tracking number is specified', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.tracking({ carrier: 'FDR' }, function(err, data) {
+            assert(err);
+            assert.strictEqual(err.message, 'Not Found');
+            assert.strictEqual(err.status, 404);
+            assert.strictEqual(data, undefined);
+
+            done();
         });
     });
 
@@ -723,8 +786,24 @@ describe('PitneyBowes.validateAddress', function() {
         });
     });
 
+    it('should return an error when no address is specified', function(done) {
+        const pitneyBowes = new PitneyBowes({
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET
+        });
+
+        pitneyBowes.validateAddress({ minimalAddressValidation: false }, function(err, data) {
+            assert(err);
+            assert.strictEqual(err.message, '');
+            assert.strictEqual(err.status, 415);
+            assert.strictEqual(data, undefined);
+
+            done();
+        });
+    });
+
     it('should validate an address and add postal service information', function(done) {
-        var pitneyBowes = new PitneyBowes({
+        const pitneyBowes = new PitneyBowes({
             api_key: process.env.API_KEY,
             api_secret: process.env.API_SECRET
         });
