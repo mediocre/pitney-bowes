@@ -6,7 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2021-08-13
+### Added
+- Added support for creating manifests: https://shipping.pitneybowes.com/api/post-manifests.html
+
 ## [0.3.0] - 2021-07-31
 ### Changed
 - Changed the default base URL for the sandbox environment to match https://shipping.pitneybowes.com/overview.html#sandbox-environment
-- Changed the way OAuth tokens are cached so that they vary by environment.
+- Changed the way OAuth tokens are cached so they vary by environment.

@@ -52,6 +52,40 @@ function PitneyBowes(args) {
         });
     };
 
+    this.createManifest = function(manifest, _options, callback) {
+        this.getOAuthToken(function(err, oAuthToken) {
+            if (err) {
+                return callback(err);
+            }
+
+            const req = {
+                auth: {
+                    bearer: oAuthToken.access_token
+                },
+                headers: {},
+                json: manifest,
+                method: 'POST',
+                url: `${options.baseUrl}/v1/manifests`
+            };
+
+            if (_options.transactionId) {
+                req.headers['X-PB-TransactionId'] = _options.transactionId;
+            }
+
+            request(req, function(err, res, body) {
+                if (err) {
+                    return callback(err);
+                }
+
+                if (res.statusCode !== 201) {
+                    return callback(createError(res.statusCode, body && body.length && body[0].message ? body[0] : body));
+                }
+
+                callback(null, body);
+            });
+        });
+    };
+
     this.getOAuthToken = function(callback) {
         const url = `${options.baseUrl.replace('/shippingservices', '')}/oauth/token`;
 
