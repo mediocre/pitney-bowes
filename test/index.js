@@ -599,8 +599,8 @@ describe('PitneyBowes.tracking', function() {
 
         pitneyBowes.tracking({ carrier: 'FDR' }, function(err, data) {
             assert(err);
-            assert.strictEqual(err.message, 'Not Found');
-            assert.strictEqual(err.status, 404);
+            assert.strictEqual(err.message, 'Bad Request');
+            assert.strictEqual(err.status, 400);
             assert.strictEqual(data, undefined);
 
             done();
